@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>罗盘时钟</title>
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        font-family: "LiSu", serif;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      html{
+        background-color: #000;
+      }
+      #TaiJi{
+        z-index: 999;
+        top: calc(50% - 40px);
+        width: 80px;
+        position: fixed;
+        left: calc(50% - 40px);
+      }
+      #clock {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+      }
+      #ring{
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        /* background: bisque; */
+     }
+     .circle{
+        border-radius: 50%;
+        position: absolute;
+        border: 1px solid #f1ebeb;
+        opacity: .4;
+        mix-blend-mode: screen;
+        background-color: #f69200ab;
+      }
+
+      .label {
+        display: inline-block;
+        color: #000000a1;
+        text-align: center;
+        /* padding: 0 5px; */
+        font-size: 14px;
+        transition: left 1s, top 1s;
+        transform-origin: 0% 0%;
+        width:60px;
+        text-shadow: 0px 0px 4px #eee;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="TaiJi"><svg viewBox="0 0 1024 1024" ><path d="M512 1024c141.386 0 256-114.614 256-256s-114.614-256-256-256-256-114.614-256-256S370.614 0 512 0c282.77 0 512 229.23 512 512S794.77 1024 512 1024z" fill="#EDEDEE" p-id="4245"></path><path d="M512 0c-141.386 0-256 114.614-256 256s114.614 256 256 256 256 114.614 256 256-114.614 256-256 256C229.23 1024 0 794.77 0 512S229.23 0 512 0z" fill="#504B5A" p-id="4246"></path><path d="M512 768m-91.428 0a91.428 91.428 0 1 0 182.856 0 91.428 91.428 0 1 0-182.856 0Z" fill="#EDEDEE" p-id="4247"></path><path d="M512 256m-91.428 0a91.428 91.428 0 1 0 182.856 0 91.428 91.428 0 1 0-182.856 0Z" fill="#504B5A" p-id="4248"></path></svg></div>
+    <div id="clock"></div>
+    <div id="ring"></div>
+    <script type="text/javascript">
+      var monthText = ["零一月", "零二月", "零三月", "零四月", "零五月", "零六月", "零七月", "零八月", "零九月", "一十月", "十一月", "十二月"];
+      var dayText = ["零一号", "零二号", "零三号", "零四号", "零五号", "零六号", "零七号", "零八号", "零九号", "一十号", "十一号", "十二号", "十三号", "十四号", "十五号", "十六号", "十七号", "十八号", "十九号", "二十号", "二一号", "二二号", "二三号", "二四号", "二五号", "二六号", "二七号", "二八号", "二九号", "三十号", "三一号"];
+      var weekText = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
+      var cuspText = ["子时", "丑时", "寅时", "卯时", "辰时", "巳时", "午时", "未时", "申时", "酉时", "戌时", "亥时"];
+      var hourText = ["零点", "零一点", "零两点", "零三点", "零四点", "零五点", "零六点", "零七点", "零八点", "零九点", "零十点", "十一点", "十二点", "十三点", "十四点", "十五点", "十六点", "十七点", "十八点", "十九点", "二十点", "二一点", "二二点", "二三点"];
+      var minuteText = ["零零分","零一分", "零二分", "零三分", "零四分", "零五分", "零六分", "零七分", "零八分", "零九分", "零十分", "十一分", "十二分", "十三分", "十四分", "十五分", "十六分", "十七分", "十八分", "十九分", "二十分", "二一分", "二二分", "二三分", "二四分", "二五分", "二六分", "二七分", "二八分", "二九分", "三十分", "三一分", "三二分", "三三分", "三四分", "三五分", "三六分", "三七分", "三八分", "三九分", "四十分", "四一分", "四二分", "四三分", "四四分", "四五分", "四六分", "四七分", "四八分", "四九分", "五十分", "五一分", "五二分", "五三分", "五四分", "五五分", "五六分", "五七分", "五八分", "五九分"];
+      var secondsText = ["零零秒","零一秒", "零二秒", "零三秒", "零四秒", "零五秒", "零六秒", "零七秒", "零八秒", "零九秒", "零十秒", "十一秒", "十二秒", "十三秒", "十四秒", "十五秒", "十六秒", "十七秒", "十八秒", "十九秒", "二十秒", "二一秒", "二二秒", "二三秒", "二四秒", "二五秒", "二六秒", "二七秒", "二八秒", "二九秒", "三十秒", "三一秒", "三二秒", "三三秒", "三四秒", "三五秒", "三六秒", "三七秒", "三八秒", "三九秒", "四十秒", "四一秒", "四二秒", "四三秒", "四四秒", "四五秒", "四六秒", "四七秒", "四八秒", "四九秒", "五十秒", "五一秒", "五二秒", "五三秒", "五四秒", "五五秒", "五六秒", "五七秒", "五八秒", "五九秒"];
+      var clock;
+      var monthList = [];
+      var dayList = [];
+      var weekList = [];
+      var cuspList = [];
+      var hourList = [];
+      var minuteList = [];
+      var secondsList = [];
+      var isCircle = false;
+      var textSet = [
+      	[monthText, monthList],
+      	[dayText, dayList],
+      	[weekText, weekList],
+      	[cuspText, cuspList],
+      	[hourText, hourList],
+      	[minuteText, minuteList],
+      	[secondsText, secondsList]
+      ];
+      window.onload = function() {
+      	init();
+      	setInterval(function() {
+      		runTime();
+      	}, 100);
+      	changePosition();
+      	setTimeout(function() {
+      		changeCircle();
+      	}, 2000);
+      }
+
+
+      function init() {
+      	clock = document.getElementById('clock');
+      	for (const element of textSet) {
+      		for (const ele of  element[0]) {
+      			var temp = createLabel(ele);
+            temp.style.display = 'none';
+      			clock.appendChild(temp);
+      			element[1].push(temp);
+      		}
+      	}
+        var  ring = document.getElementById('ring');
+        for (let i = 0; i < textSet.length + 1; i++) {
+          var div = document.createElement('div');
+          div.style.width = (i + 1) * 75 + 29 * i + 'px';
+          div.style.height = (i + 1) * 75 + 29 * i + 'px';
+          div.style.zIndex = 0-i;
+          div.classList.add('circle');
+          ring.appendChild(div);
+        }
+      }
+
+      function createLabel(text) {
+      	var div = document.createElement('div');
+      	div.classList.add('label');
+      	div.innerText = text;
+      	return div;
+      }
+
+      function runTime() {
+      	var now = new Date();
+      	var month = now.getMonth();
+      	var day = now.getDate();
+      	var week = now.getDay();
+        var cusp=(now.getHours()/2).toFixed(0);
+      	var hour = now.getHours();
+      	var minute = now.getMinutes();
+      	var seconds = now.getSeconds();
+      	initStyle();
+      	var nowValue = [month, day - 1, week, cusp, hour, minute, seconds];
+      	for (let i = 0; i < nowValue.length; i++) {
+      		var num = nowValue[i];
+      		textSet[i][1][num].style.color = '#ffeb3b';
+      	}
+      	if (isCircle) {
+      		var widthMid = document.body.clientWidth / 2;
+      		var heightMid = document.body.clientHeight / 2;
+
+      		for (let i = 0; i < textSet.length; i++) {
+      			for (var j = 0; j < textSet[i][0].length; j++) {
+              var r = (i + 1) * 35 + 17 * i;
+      				var deg = 360 / textSet[i][1].length * (j - nowValue[i]);
+      				var x = r * Math.sin(deg * Math.PI / 180) + widthMid;
+      				var y = heightMid - r * Math.cos(deg * Math.PI / 180);
+      				var temp = textSet[i][1][j];
+      				temp.style.transform = 'rotate(' + (-90 + deg) + 'deg)';
+      				temp.style.left = x + 'px';
+      				temp.style.top = y + 'px';
+      			}
+      		}
+      	}
+      }
+
+      function initStyle() {
+      	var label = document.getElementsByClassName('label');
+      	for (const element of label) {
+      		element.style.color = '#000000a1';
+          element.style.display = 'inline-block';
+      	}
+      }
+
+      function changePosition() {
+      	for (const element of textSet) {
+      		for (const ele of element[1]) {
+      			let tempX = ele.offsetLeft + "px";
+      			let tempY = ele.offsetTop + "px";
+      			setTimeout(function() {
+      				ele.style.position = "absolute";
+      				ele.style.left = tempX;
+      				ele.style.top = tempY;
+      			}, 50);
+      		}
+      	}
+      }
+
+      function changeCircle() {
+      	isCircle = true;
+      	clock.style.transform = "rotate(90deg)";
+      }
+    </script>
+  </body>
+</html>
