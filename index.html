@@ -182,6 +182,14 @@
       				temp.style.top = y + 'px';
       			}
       		}
+
+          const pageSizeMin=Math.min.apply(null, [document.body.clientWidth,document.body.clientHeight])
+          const ringSizeMin=830
+          document.getElementById('ring').style.transform='scale('+pageSizeMin/ringSizeMin+')'
+          document.getElementById('clock').style.transform='rotate(90deg) scale('+pageSizeMin/ringSizeMin+')'
+          document.getElementById('TaiJi').style.transform='scale('+pageSizeMin/ringSizeMin+')'
+
+
       	}
       }
 
