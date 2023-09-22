@@ -62,6 +62,17 @@
         width:60px;
         text-shadow: 0px 0px 4px #eee;
       }
+      /* .label:before {
+        content: "";
+        display: inline-block;
+        height: 1px;
+        background: #cddc394f;
+        width:50px;
+        position: absolute;
+        left: 5px;
+      } */
+
+
     </style>
   </head>
   <body>
@@ -98,11 +109,11 @@
       	init();
       	setInterval(function() {
       		runTime();
-      	}, 100);
+      	}, 500);
       	changePosition();
       	setTimeout(function() {
       		changeCircle();
-      	}, 2000);
+      	}, 1000);
       }
 
 
@@ -114,6 +125,11 @@
             temp.style.display = 'none';
       			clock.appendChild(temp);
       			element[1].push(temp);
+
+            var t = createLabel('------');
+            t.style.display = 'none';
+            clock.appendChild(t);
+      			element[1].push(t);
       		}
       	}
         var  ring = document.getElementById('ring');
@@ -146,7 +162,7 @@
       	initStyle();
       	var nowValue = [month, day - 1, week, cusp, hour, minute, seconds];
       	for (let i = 0; i < nowValue.length; i++) {
-      		var num = nowValue[i];
+      		var num = nowValue[i]*2;
       		textSet[i][1][num].style.color = '#ffeb3b';
       	}
       	if (isCircle) {
@@ -154,9 +170,10 @@
       		var heightMid = document.body.clientHeight / 2;
 
       		for (let i = 0; i < textSet.length; i++) {
-      			for (var j = 0; j < textSet[i][0].length; j++) {
+      			for (var j = 0; j < textSet[i][0].length*2; j++) {
               var r = (i + 1) * 35 + 17 * i;
-      				var deg = 360 / textSet[i][1].length * (j - nowValue[i]);
+              var angle=360 / textSet[i][1].length;
+      				var deg =  angle * (j - nowValue[i]*2);
       				var x = r * Math.sin(deg * Math.PI / 180) + widthMid;
       				var y = heightMid - r * Math.cos(deg * Math.PI / 180);
       				var temp = textSet[i][1][j];
